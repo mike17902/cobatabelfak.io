@@ -1,129 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title></title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="css/style.css" rel="stylesheet">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    </head>
-    <body>
-        <table>
-            <tr>
-                <td> <!-- onsubmit biar ga ngerefresh kalo di submit -->
-                    <form onsubmit="event.preventDefault();submitform();" autocomplete="off">
-                        <div>
-                            <label>NIM</label>
-                            <input type="text" name="NIM" id="nim">
-                        </div>
-                        <div>
-                            <label>Nama</label>
-                            <input type="text" name="nama" id="nama">
-                        </div>
-                        <div>
-                            <input type="submit" value="submit">
-                        </div>
-                    </form>
-                </td>
-                <td>
-                    <!-- list all record -->
-                    <table class="list" id="tableinput" border="1"> 
-                        <thead>
-                            <tr>
-                                <th>NIM</th>
-                                <th>nama</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
 
-                        </tbody>
-                    </table>
-                </td>
-            </tr>
-        </table>
-    </body>
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
 
-    <script> 
+<body>
+    <table>
+        <tr>
+            <td>
+                <!-- onsubmit biar ga ngerefresh kalo di submit -->
+                <form onsubmit="event.preventDefault();submitform();" autocomplete="off">
+                    <div>
+                        <label>NIM</label>
+                        <input type="text" name="NIM" id="nim">
+                    </div>
+                    <div>
+                        <label>Nama</label>
+                        <input type="text" name="nama" id="nama">
+                    </div>
+                    <div>
+                        <input type="submit" value="submit">
+                    </div>
+                </form>
+            </td>
+            <td>
+                <!-- list all record -->
+                <table class="list" id="tableinput" border="1">
+                    <thead>
+                        <tr>
+                            <th>NIM</th>
+                            <th>nama</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+
+<script>
 
     var selectedRow = null;
     var emptyrow = "table.insertRow(table.length)"
-        // "<tr><td>asd</td><tr>";
+    // "<tr><td>asd</td><tr>";
     // table.rows( {selected: true} ).indexes()
 
-       function submitform(){
-            var formData = readinput();
-            if(selectedRow == null)
+    function submitform() {
+        var formData = readinput();
+        console.log(formData)
+        if (selectedRow == null)
             inserttable(formData);
-            else 
-            updatedata(formData); 
+        else
+            updatedata(formData);
 
-            resetform();
-        }
+        resetform();
+    }
 
-        function readinput(){
-            var formData;
-            $(document).ready(function(){
-            formData = $("#nim").val();
-            formData = $("#nama").val();
-        });
-            // formData["NIM"] = document.getElementById("nim").value;
-            // formData["nama"] = document.getElementById("nama").value;
-            // return formData;
-        }
+    function readinput() {
+        var formData = {};
+        formData.nama = $("#nim").val();
+        formData.nim = $("#nama").val();
+        // formData["NIM"] = document.getElementById("nim").value;
+        // formData["nama"] = document.getElementById("nama").value;
+        // Setiap Function klo emang ada nilainya ya di return bukan didiemin hehe
+        return formData;
+    }
 
-        function inserttable(data){
+    function inserttable(data) {
+        console.log(data)
+        var table = $('#tableinput tbody')[0];
+        console.log(table)
+        table.innerHTML += `
+            <tr>
+                <td>${data.nim}</td>
+                <td>${data.nama}</td>
+                <td>
+                    <a onClick="onEdit(this)">Edit</a>
+                    <a onClick="onDelete(this)">Delete</a>
+                </td>
+            </tr>
+        `
 
-            var table = document.getElementById("tableinput").getElementsByTagName('tbody')[0];
-            var newRow = table.insertRow(table.length);
-            cell1 = newRow.insertCell(0);
-            // cell1.innerHTML = data.nim;
-            // $('#nim').html(cell1);
-            cell1.html($('#nim'));
-            // console.log($('#nim').val())
-            cell2 = newRow.insertCell(1);
-            // cell2.innerHTML = data.nama;
-            // $('#nama').html(cell2);
-            cell2.html($('#nama'));
-            // console.log($('#nama').val())
-            cell3 = newRow.insertCell(2);
-            cell3.innerHTML = `<a onClick="onEdit(this)">Edit</a>
-                              <a onClick="onDelete(this)"">Delete</a>` ;
-            
+        //var newRow = table.insertRow(table.length);
+        // cell1 = newRow.insertCell(0);
+        // cell1.innerHTML = data.nim;
+        // $('#nim').html(cell1);
+        // cell1.html($('#nim'));
+        // console.log($('#nim').val())
+        // cell2 = newRow.insertCell(1);
+        // cell2.innerHTML = data.nama;
+        // $('#nama').html(cell2);
+        // cell2.html($('#nama'));
+        // console.log($('#nama').val())
+        // cell3 = newRow.insertCell(2);
+        //cell3.innerHTML = `<a onClick="onEdit(this)">Edit</a>
+        //                    <a onClick="onDelete(this)"">Delete</a>` ;
+    }
 
-        }
+    // DONE
 
-        // DONE
+    function resetform() {
+        $("#nim").val("");
+        $("#nama").val("");
+        // document.getElementById("nim").value ="";
+        // document.getElementById("nama").value ="";
+        selectedRow = null;
+    }
 
-        function resetform(){
-            $("#nim").val("");
-            $("#nama").val("");
-            // document.getElementById("nim").value ="";
-            // document.getElementById("nama").value ="";
-            selectedRow = null;
-        }
+    // DONE
 
-        // DONE
+    function onEdit(td) {
+        selectedRow = td.parentElement.parentElement;
+        // document.getElementById("nim").value = selectedRow.cells[0].innerHTML;
+        // document.getElementById("nama").value = selectedRow.cells[1].innerHTML;
+        $('#nim').val = selectedRow.cells[0].html;
+        $('#nama').val = selectedRow.cells[1].html;
+    }
 
-        function onEdit(td){
-            selectedRow = td.parentElement.parentElement;
-            // document.getElementById("nim").value = selectedRow.cells[0].innerHTML;
-            // document.getElementById("nama").value = selectedRow.cells[1].innerHTML;
-            $('#nim').val = selectedRow.cells[0].html;
-            $('#nama').val = selectedRow.cells[1].html;
-        }
+    function updatedata(formData) {
+        selectedRow.cells[0].innerHTML = formData.NIM;
+        selectedRow.cells[1].innerHTML = formData.nama;
+    }
 
-        function updatedata(formData){
-            selectedRow.cells[0].innerHTML = formData.NIM;
-            selectedRow.cells[1].innerHTML = formData.nama;
-        }
-        
-        function onDelete(td){
-            row = td.parentElement.parentElement;
-            document.getElementById("tableinput").deleteRow(row.rowIndex);
-            // $('#tabelinput').deleteRow(row.rowIndex);
-            resetform();
-        }
+    function onDelete(td) {
+        row = td.parentElement.parentElement;
+        document.getElementById("tableinput").deleteRow(row.rowIndex);
+        // $('#tabelinput').deleteRow(row.rowIndex);
+        resetform();
+    }
 
-    </script>
-</html> 
+</script>
+
+</html>
